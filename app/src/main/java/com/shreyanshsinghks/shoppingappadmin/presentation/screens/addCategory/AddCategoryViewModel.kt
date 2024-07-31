@@ -1,8 +1,10 @@
 package com.shreyanshsinghks.shoppingappadmin.presentation.screens.addCategory
 
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shreyanshsinghks.shoppingappadmin.common.ResultState
@@ -32,17 +34,17 @@ class AddCategoryViewModel @Inject constructor(private val shoppingAppRepo: Shop
             shoppingAppRepo.addCategory(category = category).collect {
                 when (it) {
                     is ResultState.Success -> {
-                        _categoryState.value = CategoryState(data = it.data)
+                        _categoryState.value = CategoryState(data = it.data, isSuccess = true)
                         category = CategoryModel()
                     }
 
                     is ResultState.Error -> {
-                        _categoryState.value = CategoryState(error = it.message)
+                        _categoryState.value = CategoryState(error = it.message, isSuccess = false)
                         category = CategoryModel()
                     }
 
                     is ResultState.Loading -> {
-                        _categoryState.value = CategoryState(isLoading = true)
+                        _categoryState.value = CategoryState(isLoading = true, isSuccess = false)
                         category = CategoryModel()
                     }
                 }
@@ -56,5 +58,6 @@ class AddCategoryViewModel @Inject constructor(private val shoppingAppRepo: Shop
 data class CategoryState(
     val data: String = "",
     val isLoading: Boolean = false,
-    val error: String = ""
+    val error: String = "",
+    val isSuccess: Boolean = false
 )

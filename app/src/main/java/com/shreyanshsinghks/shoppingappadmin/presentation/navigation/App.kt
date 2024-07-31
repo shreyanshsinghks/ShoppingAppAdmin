@@ -1,42 +1,85 @@
 package com.shreyanshsinghks.shoppingappadmin.presentation.navigation
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shreyanshsinghks.shoppingappadmin.presentation.screens.addProduct.AddProductsScreen
-import com.shreyanshsinghks.shoppingappadmin.presentation.screens.addCategory.CategoryScreen
 import com.shreyanshsinghks.shoppingappadmin.presentation.screens.DashboardScreen
 import com.shreyanshsinghks.shoppingappadmin.presentation.screens.NotificationScreen
 import com.shreyanshsinghks.shoppingappadmin.presentation.screens.OrderScreen
+import com.shreyanshsinghks.shoppingappadmin.presentation.screens.addCategory.CategoryScreen
+import com.shreyanshsinghks.shoppingappadmin.presentation.screens.addProduct.AddProductsScreen
 
 @Composable
 fun App() {
     val navController = rememberNavController()
-    Box(modifier = Modifier.fillMaxSize()) {
-        NavHost(navController = navController, startDestination = Dashboard) {
-            composable<Dashboard> {
-                DashboardScreen()
-            }
+    var selectedIndex by remember {
+        mutableIntStateOf(0)
+    }
+    val bottomBarItems = listOf(
+        BottomBarItem("Dashboard", Icons.Default.Home),
+        BottomBarItem("Add Products", Icons.Default.Add),
+        BottomBarItem("Notification", Icons.Default.Notifications),
+        BottomBarItem("Category", Icons.Default.Category),
+        BottomBarItem("Order", Icons.Default.ShoppingCart)
+    )
 
-            composable<AddProducts> {
-                AddProductsScreen()
+    Scaffold(bottomBar = {
+        NavigationBar {
+            bottomBarItems.forEachIndexed { index, bottomBarItem ->
+                NavigationBarItem(
+                    selected = selectedIndex == index,
+                    onClick = { selectedIndex = index },
+                    icon = {
+                        Image(
+                            imageVector = bottomBarItem.icon,
+                            contentDescription = bottomBarItem.name
+                        )
+                    },
+                    label = {
+                        if (selectedIndex == index) {
+                            Text(text = bottomBarItem.name)
+                        }
+                    }
+                )
             }
-
-            composable<Notification> {
-                NotificationScreen()
-            }
-
-            composable<Category> {
-                CategoryScreen()
-            }
-
-            composable<Order> {
-                OrderScreen()
+        }
+    }) { innerPadding ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            when (selectedIndex) {
+                0 -> DashboardScreen()
+                1 -> AddProductsScreen()
+                2 -> NotificationScreen()
+                3 -> CategoryScreen()
+                4 -> OrderScreen()
             }
         }
     }
 }
+
+
+data class BottomBarItem(val name: String, val icon: ImageVector)

@@ -10,6 +10,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +31,7 @@ fun AddProductsScreen(viewModel: AddProductViewModel = hiltViewModel()) {
     var productName by remember { mutableStateOf("") }
     var productDescription by remember { mutableStateOf("") }
     var productPrice by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("Select Category") }
     var expanded by remember { mutableStateOf(false) }
 
     val categories by viewModel.allCategories.collectAsState()
@@ -40,6 +41,12 @@ fun AddProductsScreen(viewModel: AddProductViewModel = hiltViewModel()) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        Text(
+            text = "Add Product",
+            style = MaterialTheme.typography.displaySmall,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
         OutlinedTextField(
             value = productName,
             onValueChange = { productName = it },

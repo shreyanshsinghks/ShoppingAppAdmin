@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.shreyanshsinghks.shoppingappadmin.presentation.navigation.App
 import com.shreyanshsinghks.shoppingappadmin.presentation.screens.addProduct.AddProductsScreen
 import com.shreyanshsinghks.shoppingappadmin.ui.theme.ShoppingAppAdminTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,12 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ShoppingAppAdminTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Surface(modifier = Modifier.padding(innerPadding)) {
-//                        CategoryScreen()
-                        AddProductsScreen()
-                    }
-                }
+                App()
             }
         }
     }
