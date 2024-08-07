@@ -13,6 +13,6 @@ fun OrderScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Dashboard Screen")
+        Text(text = "Order Screen")
     }
 }

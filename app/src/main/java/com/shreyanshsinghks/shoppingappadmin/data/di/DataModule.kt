@@ -1,6 +1,7 @@
 package com.shreyanshsinghks.shoppingappadmin.data.di
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +17,12 @@ object DataModule {
     @Provides
     fun provideFirebase(): FirebaseFirestore{
         return FirebaseFirestore.getInstance()
+    }
+
+    @Singleton
+    @Provides
+    fun providesDatabaseStorage(): FirebaseStorage {
+        return FirebaseStorage.getInstance()
     }
 
 }

@@ -1,11 +1,14 @@
 package com.shreyanshsinghks.shoppingappadmin.presentation.screens.addProduct
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -33,6 +36,12 @@ fun AddProductsScreen(viewModel: AddProductViewModel = hiltViewModel()) {
     var productPrice by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Select Category") }
     var expanded by remember { mutableStateOf(false) }
+    val galleryLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
+            if (it != null) {
+                viewModel.addImage(it)
+            }
+        }
 
     val categories by viewModel.allCategories.collectAsState()
 
@@ -83,7 +92,9 @@ fun AddProductsScreen(viewModel: AddProductViewModel = hiltViewModel()) {
                 onValueChange = { },
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.fillMaxWidth().menuAnchor()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor()
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -96,6 +107,7 @@ fun AddProductsScreen(viewModel: AddProductViewModel = hiltViewModel()) {
                             onClick = { }
                         )
                     }
+
                     is ResultState.Success -> {
                         (categories as ResultState.Success<List<CategoryModel>>).data.forEach { category ->
                             DropdownMenuItem(
@@ -107,6 +119,7 @@ fun AddProductsScreen(viewModel: AddProductViewModel = hiltViewModel()) {
                             )
                         }
                     }
+
                     is ResultState.Error -> {
                         DropdownMenuItem(
                             text = { Text("Error loading categories") },
@@ -117,5 +130,10 @@ fun AddProductsScreen(viewModel: AddProductViewModel = hiltViewModel()) {
             }
         }
 
+        Button(onClick = {
+            galleryLauncher.launch("image/*")
+        }) {
+            Text(text = "Select Image")
+        }
     }
 }

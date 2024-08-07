@@ -1,7 +1,10 @@
 package com.shreyanshsinghks.shoppingappadmin.presentation.screens.addProduct
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.storage.FirebaseStorage
 import com.shreyanshsinghks.shoppingappadmin.common.ResultState
 import com.shreyanshsinghks.shoppingappadmin.domain.model.CategoryModel
 import com.shreyanshsinghks.shoppingappadmin.domain.repository.ShoppingAppRepo
@@ -23,4 +26,13 @@ class AddProductViewModel @Inject constructor(private val shoppingAppRepo: Shopp
             }
         }
     }
+
+    fun addImage(uri: Uri) {
+        viewModelScope.launch {
+            shoppingAppRepo.addImage(uri).collect {
+                Log.d("AddImage", it.toString())
+            }
+        }
+    }
+
 }

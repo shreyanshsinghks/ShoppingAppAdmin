@@ -13,6 +13,6 @@ fun NotificationScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Dashboard Screen")
+        Text(text = "Notification Screen")
     }
 }

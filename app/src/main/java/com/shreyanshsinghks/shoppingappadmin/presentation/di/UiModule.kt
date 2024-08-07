@@ -1,6 +1,7 @@
 package com.shreyanshsinghks.shoppingappadmin.presentation.di
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.shreyanshsinghks.shoppingappadmin.data.repository.ShoppingAppRepoImpl
 import com.shreyanshsinghks.shoppingappadmin.domain.repository.ShoppingAppRepo
 import dagger.Module
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 @InstallIn(ViewModelComponent::class)
 object UiModule {
     @Provides
-    fun provideRepo(firestore: FirebaseFirestore): ShoppingAppRepo{
-        return ShoppingAppRepoImpl(firestore)
+    fun provideRepo(firestore: FirebaseFirestore, firebaseStorage: FirebaseStorage): ShoppingAppRepo{
+        return ShoppingAppRepoImpl(firestore, firebaseStorage)
     }
 }
