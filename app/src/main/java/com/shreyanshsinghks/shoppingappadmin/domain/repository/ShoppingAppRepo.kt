@@ -12,8 +12,6 @@ interface ShoppingAppRepo {
 
     suspend fun getCategories(): Flow<ResultState<List<CategoryModel>>>
 
-    suspend fun addImage(uri: Uri): Flow<ResultState<String>>
-
-    suspend fun addProduct(product: ProductModel): Flow<ResultState<String>>
+    suspend fun addProduct(product: ProductModel, uri: Uri): Flow<ResultState<String>>
 
 }

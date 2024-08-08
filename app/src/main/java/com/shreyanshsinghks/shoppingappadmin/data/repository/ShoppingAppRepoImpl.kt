@@ -51,24 +51,41 @@ class ShoppingAppRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun addImage(uri: Uri): Flow<ResultState<String>> = callbackFlow {
+
+    override suspend fun addProduct(product: ProductModel, uri: Uri): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.Loading)
 
-        firebaseStorage.reference.child("productImages/${System.currentTimeMillis()}").putFile(uri).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    it.result.storage.downloadUrl.addOnSuccessListener { image ->
-                        trySend(ResultState.Success(image.toString()))
+        // Add the product to the Firestore database
+        firebaseFirestore.collection("products").add(product)
+            .addOnSuccessListener { documentReference ->
+                // After the product is added, upload the image to the storage
+                firebaseStorage.reference.child("productImages/${documentReference.id}")
+                    .putFile(uri)
+                    .addOnCompleteListener { uploadTask ->
+                        if (uploadTask.isSuccessful) {
+                            uploadTask.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
+                                // Update the product with the image URL
+                                firebaseFirestore.collection("products").document(documentReference.id)
+                                    .update("imageUrl", imageUrl.toString())
+                                    .addOnSuccessListener {
+                                        trySend(ResultState.Success("Product Added"))
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        trySend(ResultState.Error(exception.message.toString()))
+                                    }
+                            }
+                        } else {
+                            trySend(ResultState.Error(uploadTask.exception?.message.toString()))
+                        }
                     }
-                } else {
-                    trySend(ResultState.Error(it.exception?.message.toString()))
-                }
             }
+            .addOnFailureListener { exception ->
+                trySend(ResultState.Error(exception.message.toString()))
+            }
+
         awaitClose {
             close()
         }
     }
 
-    override suspend fun addProduct(product: ProductModel): Flow<ResultState<String>> {
-        TODO("Not yet implemented")
-    }
 }
